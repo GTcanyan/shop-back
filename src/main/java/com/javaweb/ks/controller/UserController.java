@@ -1,7 +1,6 @@
 package com.javaweb.ks.controller;
 
 
-import com.javaweb.ks.dao.UserDao;
 import com.javaweb.ks.model.User;
 import com.javaweb.ks.result.Results;
 import com.javaweb.ks.service.UserService;
@@ -9,7 +8,10 @@ import com.javaweb.ks.util.TokenVerify;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Slf4j
@@ -26,7 +28,7 @@ public class UserController {
     @GetMapping("/test")
     @ResponseBody
     public User test01(){
-        return userService.getUserById(1);
+        return userService.getUserById(14);
     }
 
 

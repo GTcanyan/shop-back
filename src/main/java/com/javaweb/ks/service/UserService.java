@@ -1,7 +1,10 @@
 package com.javaweb.ks.service;
 
 import com.javaweb.ks.model.User;
+import com.javaweb.ks.result.Result;
 import com.javaweb.ks.result.Results;
+
+import java.util.Map;
 
 public interface UserService {
 
@@ -25,4 +28,5 @@ public interface UserService {
 
     // 获取用户地址
     Results getUserSite(int userID);
+
 }

@@ -5,10 +5,12 @@ import com.javaweb.ks.model.User;
 import com.javaweb.ks.result.AdminResults;
 import com.javaweb.ks.result.Results;
 
+import java.util.Map;
+
 public interface AdminService {
 
     // 管理员登录
-    Results adminLogin(String username, String password);
+    Map<String, Object> adminLogin(String username, String password);
 
     // 获取用户列表信息，包括分页功能
     AdminResults getAllUser(Integer offset, Integer limit);
@@ -42,4 +44,8 @@ public interface AdminService {
 
     // 修改用户信息
     Results changeUserInfo(User user);
+
+    Map<String, Object> getAdminInfo(String token);
+
+    void logout(String token);
 }

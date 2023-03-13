@@ -1,23 +1,21 @@
 package com.javaweb.ks.controller;
 
 
-import com.javaweb.ks.dao.AdminDao;
 import com.javaweb.ks.model.Shop;
 import com.javaweb.ks.model.User;
 import com.javaweb.ks.result.AdminResults;
 import com.javaweb.ks.result.PageTableRequest;
+import com.javaweb.ks.result.Result;
 import com.javaweb.ks.result.Results;
 import com.javaweb.ks.service.AdminService;
 import com.javaweb.ks.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Map;
+
+@RestController
 @Slf4j
 @RequestMapping("api/v1/admin")
 public class AdminController {
@@ -31,8 +29,27 @@ public class AdminController {
     // 管理员登录
     @PostMapping("/login")
     @ResponseBody
-    public Results AdminLogin(String username, String password){
-        return adminService.adminLogin(username, password);
+    public Result AdminLogin(String username, String password){
+        Map<String,Object> data = adminService.adminLogin(username, password);
+        if(data != null){
+            return Result.success(data);
+        }
+        return Result.fail(20002,"用户名或密码错误");
+    }
+
+    @GetMapping("/info")
+    public Result<Map<String,Object>> getUserInfo(@RequestParam("token") String token){
+        Map<String,Object> data = adminService.getAdminInfo(token);
+        if(data != null){
+            return Result.success(data);
+        }
+        return Result.fail(20003,"登录信息无效，请重新登录");
+    }
+    // 管理员注销
+    @PostMapping("/logout")
+    public Result<?> logout(@RequestHeader("X-Token") String token) {
+        adminService.logout(token);
+        return Result.success("注销成功");
     }
 
     // 获取用户列表信息，包括分页功能
@@ -40,7 +57,10 @@ public class AdminController {
     @ResponseBody
     public AdminResults getAllUser(PageTableRequest pageTableRequest){
         pageTableRequest.countOffset(); // 先计算offset
+//        System.out.println(pageTableRequest.toString());
         return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit());
+//        return adminService.getAllUser(5,0);
+
     }
 
     // 添加用户

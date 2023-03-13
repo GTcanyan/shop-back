@@ -11,8 +11,14 @@ import com.javaweb.ks.service.AdminService;
 import com.javaweb.ks.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -25,15 +31,23 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
     // 管理员登录
     @Override
-    public Results adminLogin(String username, String password) {
+    public Map<String, Object> adminLogin(String username, String password) {
         String adminPassword = adminDao.getAdminPass(username);// 先获取老的密码
         if(MD5.crypt(password).equals(adminPassword)){ // 密码正确
-            return new Results(1, "登录成功");
-        }else {
-            return new Results(0, "账号或密码错误");
+            Map<String, Object> data = new HashMap<>();
+            String key = "user:" + UUID.randomUUID();
+            data.put("token", key);    // 待优化，最终方案jwt
+            // 存入Redis
+            redisTemplate.opsForValue().set(key,username,30, TimeUnit.MINUTES);
+            return data;
         }
+        return null;
     }
 
     // 获取用户列表信息，包括分页功能
@@ -103,13 +117,14 @@ public class AdminServiceImpl implements AdminService {
     // 修改密码
     @Override
     public Results changePassword(String oldPassword, String newPassword) {
-        Results results = adminLogin("admin", oldPassword);
-        if(results.getCode() == 1){ // 旧密码正确
-            adminDao.changePassword(MD5.crypt(newPassword));
-            return new Results(1, "密码修改成功");
-        }else {
-            return new Results(0, "旧密码不正确");
-        }
+        // Results results = adminLogin("admin", oldPassword);
+        // if(results.getCode() == 1){ // 旧密码正确
+        //     adminDao.changePassword(MD5.crypt(newPassword));
+        //     return new Results(1, "密码修改成功");
+        // }else {
+        //     return new Results(0, "旧密码不正确");
+        // }
+        return null;
     }
 
     // 修改用户信息
@@ -117,6 +132,30 @@ public class AdminServiceImpl implements AdminService {
     public Results changeUserInfo(User user) {
         userDao.changeUserInfo(user);
         return new Results(1, "修改用户信息成功");
+    }
+
+    @Override
+    public Map<String, Object> getAdminInfo(String token) {
+        // 根据token获取用户信息，从Redis
+        Object obj = redisTemplate.opsForValue().get(token);
+        if (obj != null){
+            // System.out.println(JSON.toJSONString(obj));
+            // Admin admin = JSON.parseObject(JSON.toJSONString(obj),Admin.class);
+            Map<String, Object> data = new HashMap<>();
+            data.put("username",obj);
+            // data.put("password",admin.getPassword());
+
+            //角色
+            // List<String> roleList = this.getBaseMapper().getRoleNamesByUserId(loginUser.getId());
+            // data.put("roles", roleList);
+            return data;
+        }
+        return null;
+    }
+    // 后台管理员退出
+    @Override
+    public void logout(String token) {
+        redisTemplate.delete(token);
     }
 
 }

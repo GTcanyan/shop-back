@@ -6,7 +6,7 @@ spring:
     active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/xiaomishop?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/xiaomishop?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&serverTimezone=GMT%2b8
     username: root
     password: 123456
     platform: mysql
@@ -28,6 +28,9 @@ spring:
     # 是否缓存preparedStatement，打开PSCache，并且指定每个连接上PSCache的大小。官方建议MySQL下建议关闭，如果用SQL防火墙 建议打开
     poolPreparedStatements: true
     maxPoolPreparedStatementPerConnectionSize: 20
+  redis:
+      host: localhost
+      port: 6379
 mybatis:
   #  配置要扫描的JavaBean
   type-aliases-package: com.javaweb.ks.model

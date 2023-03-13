@@ -1,5 +1,6 @@
 package com.javaweb.ks;
 
+import com.javaweb.ks.dao.OrderDao;
 import com.javaweb.ks.dao.UserDao;
 import com.javaweb.ks.util.TokenVerify;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,16 @@ class KsApplicationTests {
 
 	@Autowired
 	UserDao userDao;
+
+	@Autowired
+	OrderDao orderDao;
+
+	@Test
+	void getOrders(){
+		System.out.println(orderDao.getOrders(14));
+		// System.out.println(new Date());
+
+	}
 
 	@Autowired
 	TokenVerify tokenVerify;

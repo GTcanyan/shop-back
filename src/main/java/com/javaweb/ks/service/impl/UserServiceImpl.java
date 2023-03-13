@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer id) {
-        return userDao.getUserById(1);
+        return userDao.getUserById(id);
     }
 
     // 用户注册

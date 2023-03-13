@@ -1,6 +1,5 @@
 package com.javaweb.ks.dao;
 
-import com.javaweb.ks.dto.IndexPage;
 import com.javaweb.ks.dto.ShopCart;
 import com.javaweb.ks.model.Shop;
 import com.javaweb.ks.model.User;
@@ -14,6 +13,10 @@ public interface AdminDao {
     // 获取管理员的密码
     @Select("select password from admin where username = #{username} ")
     String getAdminPass(String username);
+
+    // 获取管理员信息
+    // @Select()
+    // <Admin> getAdminInfo();
 
     // 获取所有用户信息，同时分页
     @Select("select * from user limit #{limit} offset #{offset}")
