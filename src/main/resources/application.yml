@@ -6,7 +6,7 @@ spring:
     active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/xiaomishop?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&serverTimezone=GMT%2b8
+    url: jdbc:mysql://localhost:3306/xiaomishop?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
     username: root
     password: 123456
     platform: mysql
@@ -33,7 +33,7 @@ spring:
       port: 6379
 mybatis:
   #  配置要扫描的JavaBean
-  type-aliases-package: com.javaweb.ks.model
+  type-aliases-package: com.javaweb.hhjrp.model
   #  配置到时候要扫描的mapper文件
   mapper-locations: classpath:/mybatis-mappers/*
   configuration:

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.javaweb</groupId>
-	<artifactId>ks</artifactId>
+	<artifactId>hhjrp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ks</name>
+	<name>hhjrp</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
