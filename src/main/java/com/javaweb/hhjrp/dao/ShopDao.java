@@ -4,6 +4,7 @@ import com.javaweb.hhjrp.model.Carousel;
 import com.javaweb.hhjrp.model.Shop;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -30,4 +31,7 @@ public interface ShopDao {
     // 获取某种商品列表的最上面的轮播图
     @Select("select * from carousel where sort = #{type} ")
     List<Carousel> getCarouselList(int type);
+
+    @Update("UPDATE shop SET views = views + 1 WHERE id = #{id}")
+    int addViews(int id);
 }

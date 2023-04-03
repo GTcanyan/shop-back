@@ -13,5 +13,5 @@ public class Shop {
     private String img;
     private int sort;
     private String other;
-    private String sortname;
+    private int views;
 }

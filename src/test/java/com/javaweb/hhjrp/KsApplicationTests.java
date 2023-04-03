@@ -25,7 +25,7 @@ class KsApplicationTests {
 
 	@Test
 	void getOrders(){
-		System.out.println(orderDao.getOrders(14));
+		System.out.println(orderDao.getOrders(0,5,14));
 		// System.out.println(new Date());
 	}
 	@Test

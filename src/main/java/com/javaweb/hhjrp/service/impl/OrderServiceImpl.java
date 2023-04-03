@@ -5,6 +5,7 @@ import com.javaweb.hhjrp.dao.OrderDao;
 import com.javaweb.hhjrp.dto.ShopCart;
 import com.javaweb.hhjrp.model.OrderDetails;
 import com.javaweb.hhjrp.model.Orders;
+import com.javaweb.hhjrp.result.AdminResults;
 import com.javaweb.hhjrp.result.Results;
 import com.javaweb.hhjrp.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,8 @@ public class OrderServiceImpl implements OrderService {
 
     // 获取订单详情
     @Override
-    public Results getOrders(int userid){
-        return new Results(1,"获取成功",orderDao.getOrders(userid));
+    public AdminResults getOrders(Integer offset, Integer limit,int userid){
+        return new AdminResults(20000,"获取成功",orderDao.getOrders(offset,limit,userid),orderDao.getOrderCountByUId(userid));
     }
 
     // 提交订单

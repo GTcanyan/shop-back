@@ -24,6 +24,8 @@ public class ShopServiceImpl implements ShopService {
     // 获取商品详情信息
     @Override
     public Results getShopInfo(int shopID) {
+        // 浏览数加一
+        shopDao.addViews(shopID);
         return new Results(1, "获取成功", shopDao.getShopInfoById(shopID));
     }
 
