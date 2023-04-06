@@ -4,6 +4,7 @@ import com.javaweb.hhjrp.dao.AdminDao;
 import com.javaweb.hhjrp.dao.UserDao;
 import com.javaweb.hhjrp.dto.IndexPage;
 import com.javaweb.hhjrp.model.Shop;
+import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import com.javaweb.hhjrp.result.AdminResults;
 import com.javaweb.hhjrp.result.Results;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -67,12 +69,16 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Results deleteUser(int userID) {
         adminDao.deleteUser(userID);
-        return new Results(1, "删除成功");
+        return new Results(20000, "删除成功");
+    }
+    @Override
+    public List<Sort> getSort() {
+        return adminDao.getSort();
     }
 
     // 获取所有商品列表，同时分页
     @Override
-    public AdminResults getAllShop(Integer offset, Integer limit,int id,String shopname) {
+    public AdminResults getAllShop(Integer offset, Integer limit, String id, String shopname) {
         return new AdminResults(20000, "获取成功", adminDao.getAllShop(offset, limit,id,shopname), adminDao.getShopCount());
     }
 
@@ -80,27 +86,27 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Results addShop(Shop shop) {
         adminDao.addShop(shop);
-        return new Results(1, "添加成功");
+        return new Results(20000, "添加成功");
     }
 
     // 修改商品信息
     @Override
     public Results changeShopInform(Shop shop) {
         adminDao.changeShopInform(shop);
-        return new Results(1, "修改成功");
+        return new Results(20000, "修改成功");
     }
 
     // 删除商品
     @Override
     public Results deleteShop(int shopID) {
         adminDao.deleteShop(shopID);
-        return new Results(1, "删除成功");
+        return new Results(20000, "删除成功");
     }
 
     // 获取用户购物车
     @Override
     public AdminResults getAllCart(Integer offset, Integer limit) {
-        return new AdminResults(0, "获取成功", adminDao.getAllCart(offset, limit), adminDao.getCartCount());
+        return new AdminResults(20000, "获取成功", adminDao.getAllCart(offset, limit), adminDao.getCartCount());
     }
 
     // 获取主页的一些信息，获取商品总数和用户总数
@@ -111,7 +117,7 @@ public class AdminServiceImpl implements AdminService {
         Integer shopCount = adminDao.getShopCount(); // 商品总数
         indexPage.setShop(shopCount);
         indexPage.setUser(userCount);
-        return new Results(1, "获取成功", indexPage);
+        return new Results(20000, "获取成功", indexPage);
     }
 
     // 修改密码
@@ -131,7 +137,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Results changeUserInfo(User user) {
         userDao.changeUserInfo(user);
-        return new Results(1, "修改用户信息成功");
+        return new Results(20000, "修改用户信息成功");
     }
 
     @Override
@@ -157,5 +163,7 @@ public class AdminServiceImpl implements AdminService {
     public void logout(String token) {
         redisTemplate.delete(token);
     }
+
+
 
 }

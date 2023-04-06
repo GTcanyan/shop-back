@@ -1,7 +1,9 @@
 package com.javaweb.hhjrp.dao;
 
 import com.javaweb.hhjrp.dto.ShopCart;
+import com.javaweb.hhjrp.dto.ShopSort;
 import com.javaweb.hhjrp.model.Shop;
+import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import org.apache.ibatis.annotations.*;
 
@@ -39,11 +41,14 @@ public interface AdminDao {
     Integer getShopCount();
 
     // 获取所有商品信息，同时分页
-    @Select("select a.*,b.sortname from shop a LEFT JOIN sort b ON a.sort=b.sortID limit #{limit} offset #{offset} ")
-    List<Shop> getAllShop(Integer offset, Integer limit,int id, String shopname);
+    // @Select("select a.*,b.sortname from shop a LEFT JOIN sort b ON a.sort=b.sortID  WHERE 1=1"
+    //         + " <if test='id != null'>AND CONCAT(id) like CONCAT('%', #{id}, '%')</if>"
+    //         + " <if test='shopname != null'>AND name LIKE CONCAT('%', #{shopname}, '%')</if>" +
+    //         " limit #{limit} offset #{offset}")
+    List<ShopSort> getAllShop(Integer offset, Integer limit, String id, String shopname);
 
     // 添加商品
-    @Insert("insert into shop(name, price, old_price, description, img, sort, other) values(#{name}, #{price}, #{oldPrice}, #{description}, #{img}, #{sort}, #{other})")
+    @Insert("insert into shop(name, price, old_price, description, img, sort, other,count) values(#{name}, #{price}, #{oldPrice}, #{description}, #{img}, #{sort}, #{other},#{count})")
     void addShop(Shop shop);
 
     // 修改商品信息
@@ -69,4 +74,7 @@ public interface AdminDao {
     // 修改管理员密码
     @Update("update admin set password = #{crypt} where username = 'admin' ")
     void changePassword(String crypt);
+
+    @Select("SELECT * FROM sort")
+    List<Sort> getSort();
 }

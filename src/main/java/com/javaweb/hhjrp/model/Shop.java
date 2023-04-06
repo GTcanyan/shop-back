@@ -2,6 +2,8 @@ package com.javaweb.hhjrp.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Shop {
 
@@ -14,4 +16,7 @@ public class Shop {
     private int sort;
     private String other;
     private int views;
+    private int count;
+    private Date createTime;
+    private Date updateTime;
 }

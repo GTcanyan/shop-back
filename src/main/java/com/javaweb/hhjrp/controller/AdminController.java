@@ -2,6 +2,7 @@ package com.javaweb.hhjrp.controller;
 
 
 import com.javaweb.hhjrp.model.Shop;
+import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import com.javaweb.hhjrp.result.AdminResults;
 import com.javaweb.hhjrp.result.PageTableRequest;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,9 +59,9 @@ public class AdminController {
     @ResponseBody
     public AdminResults getAllUser(PageTableRequest pageTableRequest){
         pageTableRequest.countOffset(); // 先计算offset
-//        System.out.println(pageTableRequest.toString());
+        // System.out.println(pageTableRequest.toString());
         return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit());
-//        return adminService.getAllUser(5,0);
+        // return adminService.getAllUser(5,0);
 
     }
 
@@ -84,14 +86,26 @@ public class AdminController {
     public Results deleteUser(int userID){
         return adminService.deleteUser(userID);
     }
+
+    // 获取商品类型
+    @GetMapping("/getSort")
+    @ResponseBody
+    public Result getSort(){
+        List<Sort> data = adminService.getSort();
+        if(data != null){
+            return Result.success(data);
+        }
+        return Result.fail(20002,"用户名或密码错误");
+
+    }
     // 获取所有商品列表，同时分页
     @GetMapping("/getAllShop")
     @ResponseBody
     public AdminResults getAllShop(PageTableRequest pageTableRequest,
-                                   @RequestParam(value = "id", required = false) int id,
-                                   @RequestParam(value = "shopname", required = false) String shopname){
+                                   @RequestParam(value = "id", required = false) String strId,
+                                   @RequestParam(value = "shopName", required = false) String shopName){
         pageTableRequest.countOffset();
-        return adminService.getAllShop(pageTableRequest.getOffset(), pageTableRequest.getLimit(),id,shopname);
+        return adminService.getAllShop(pageTableRequest.getOffset(), pageTableRequest.getLimit(),strId,shopName);
     }
 
     // 添加商品

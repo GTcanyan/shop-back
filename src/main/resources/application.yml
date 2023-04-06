@@ -42,4 +42,4 @@ mybatis:
 # 配置输出sql查询语句
 logging:
   level:
-    com.javaweb.ks.dao: debug
+    com.javaweb.hhjrp.dao: debug

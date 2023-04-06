@@ -29,11 +29,19 @@
         </set>
         where t.ID = #{ID}
     </update>
-<!--    <select id="getAllShop" resultType="com.javaweb.hhjrp.model.Shop">-->
-<!--        select a.*,b.sortname-->
-<!--        from shop a-->
-<!--            LEFT JOIN sort b ON a.sort=b.sortID-->
-<!--        WHERE cast(a.ID as char) LIKE '%#{id}%'  limit #{limit} offset #{offset}-->
-<!--    </select>-->
+    <select id="getAllShop" resultType="com.javaweb.hhjrp.dto.ShopSort">
+        select a.*,b.sortName
+        from shop a
+            LEFT JOIN sort b ON a.sort=b.sortID
+        <where>
+            <if test='id != null'>
+             AND CONCAT(id) like CONCAT('%', #{id}, '%')
+             </if>
+             <if test='shopname != null'>
+                 AND name LIKE CONCAT('%', #{shopname}, '%')
+             </if>
+        </where>
+          limit #{limit} offset #{offset}
+    </select>
 
 </mapper>

@@ -50,7 +50,7 @@ public class UserController {
     @GetMapping("/getInfo")
     @ResponseBody
     public Results getInfo(int userID, String token){
-        return userService.getInfo(userID, token);
+         return userService.getInfo(userID, token);
     }
 
     // 修改用户信息
