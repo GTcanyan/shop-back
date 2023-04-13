@@ -40,7 +40,7 @@ public class AdminController {
     }
 
     @GetMapping("/info")
-    public Result<Map<String,Object>> getUserInfo(@RequestParam("token") String token){
+    public Result<Map<String,Object>> getAdminInfo(@RequestParam("token") String token){
         Map<String,Object> data = adminService.getAdminInfo(token);
         if(data != null){
             return Result.success(data);
@@ -98,6 +98,12 @@ public class AdminController {
         return Result.fail(20002,"用户名或密码错误");
 
     }
+    // 获取所有商品列表
+    @GetMapping("/getAllShopList")
+    @ResponseBody
+    public Result getAllShopList(){
+        return adminService.getAllShopList();
+    }
     // 获取所有商品列表，同时分页
     @GetMapping("/getAllShop")
     @ResponseBody
@@ -148,8 +154,26 @@ public class AdminController {
     // 修改管理员密码
     @PostMapping("/changePassword")
     @ResponseBody
-    public Results changePassword(String oldPassword, String newPassword){
+    public Results changePassword(String oldPassword, String newPassword) {
         return adminService.changePassword(oldPassword, newPassword);
     }
+    // 获取轮播图数据
+    @PostMapping("/getCarousel")
+    @ResponseBody
+    public Result getCarousel(){
+        return adminService.getCarousel();
+    }
+    // 启停轮播图
+    @PostMapping("/changeCarousel")
+    @ResponseBody
+    public Result changeCarousel(int id,int start){
+        return adminService.changeCarousel(id,start);
+    }
+    @PostMapping("/addCarousel")
+    @ResponseBody
+    public Result addCarousel(int shopId){
+        return adminService.addCarousel(shopId);
+    }
+
 
 }

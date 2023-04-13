@@ -2,6 +2,7 @@ package com.javaweb.hhjrp.dao;
 
 import com.javaweb.hhjrp.dto.ShopCart;
 import com.javaweb.hhjrp.dto.ShopSort;
+import com.javaweb.hhjrp.model.Carousel;
 import com.javaweb.hhjrp.model.Shop;
 import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
@@ -35,6 +36,10 @@ public interface AdminDao {
     // 删除用户
     @Delete("delete from user where ID = #{userID} ")
     void deleteUser(int userID);
+
+    // 获取所有商品，不分页
+    @Select({"select ID,name from shop"})
+    List<Shop> getAllShopList();
 
     // 获取商品总数
     @Select("select count(ID) from shop")
@@ -77,4 +82,21 @@ public interface AdminDao {
 
     @Select("SELECT * FROM sort")
     List<Sort> getSort();
+
+    @Select("SELECT * FROM carousel ")
+    List<Carousel> getCarousel();
+
+    // 重载getCarousel()
+    @Select("SELECT * FROM carousel WHERE shop_id = #{shopId} ")
+    Carousel getCarouselByShopId(int shopId);
+
+    @Update("UPDATE carousel set `start`=#{start} where id = #{id}")
+    int changeCarousel(int id,int start);
+
+
+    @Select("select * from shop where ID = #{shopId}")
+    Shop getShop(int shopId);
+
+    @Insert("INSERT INTO `carousel` (`sort`, `img`, `shop_id`) VALUES (#{sort},#{img},#{id})")
+    int addCarousel(int sort, String img, int id);
 }

@@ -3,13 +3,17 @@ package com.javaweb.hhjrp.service.impl;
 import com.javaweb.hhjrp.dao.AdminDao;
 import com.javaweb.hhjrp.dao.UserDao;
 import com.javaweb.hhjrp.dto.IndexPage;
+import com.javaweb.hhjrp.model.Carousel;
 import com.javaweb.hhjrp.model.Shop;
 import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import com.javaweb.hhjrp.result.AdminResults;
+import com.javaweb.hhjrp.result.Result;
 import com.javaweb.hhjrp.result.Results;
 import com.javaweb.hhjrp.service.AdminService;
 import com.javaweb.hhjrp.util.MD5;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +26,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+
+@Api(value = "管理员控制接口，tags = 测试接口1")
 @Service
 @Transactional
 @Slf4j
@@ -38,6 +44,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     // 管理员登录
+    @ApiOperation("登录页面")
     @Override
     public Map<String, Object> adminLogin(String username, String password) {
         String adminPassword = adminDao.getAdminPass(username);// 先获取老的密码
@@ -76,6 +83,72 @@ public class AdminServiceImpl implements AdminService {
         return adminDao.getSort();
     }
 
+    // 获取轮播图列表
+    @Override
+    public Result getCarousel() {
+
+        return Result.success(adminDao.getCarousel());
+    }
+
+    // 启停轮播图
+    @Override
+    public  Result changeCarousel(int id,int start){
+        if (start==1){
+            if (adminDao.changeCarousel(id,start)==1)
+                return Result.success("成功启用该轮播图");
+            else
+                return Result.fail("修改失败");
+        }else {
+            if (adminDao.changeCarousel(id,start)==1)
+                return Result.success("停用该轮播图");
+            else
+                return Result.fail("修改失败");
+        }
+
+    }
+
+    // 新增轮播图
+    @Override
+    public Result addCarousel(int shopId) {
+        Shop shop = adminDao.getShop(shopId);
+        Carousel carousel = adminDao.getCarouselByShopId(shopId);
+        // System.out.println(carousel.isStart());
+        if (shop==null){
+            return Result.fail("商品不存在！");
+        }else if(carousel != null){
+            //    加一个判断如果轮播图表已有该商品，则判断是否为开启状态。变为启用轮播图，而不是新增轮播图**********
+            if (carousel.isStart()) {
+                return Result.fail("已存在轮播图，并且已开启");
+            }else {
+
+                return Result.success(adminDao.changeCarousel(carousel.getID(),1),"重复添加咯，自动帮您开启~");
+            }
+        }
+        else {
+            String str = shop.getImg();
+            String substr = "";
+            int endIndex = str.indexOf("&&"); // 获取逗号的位置
+            if (endIndex != -1) { // 如果找到逗号
+                substr = str.substring(0, endIndex); // 截取从第 0 个位置到&&之前的子字符串
+            }else {
+                substr=str;
+            }
+            if (adminDao.addCarousel(shop.getSort(),substr,shop.getID())==1) {
+                return Result.success("新增成功");
+            }else {
+                return Result.fail("新增失败");
+            }
+        }
+    }
+
+
+    // 获取所有商品
+    @Override
+    public Result getAllShopList() {
+        return Result.success(adminDao.getAllShopList());
+    }
+
+
     // 获取所有商品列表，同时分页
     @Override
     public AdminResults getAllShop(Integer offset, Integer limit, String id, String shopname) {
@@ -85,8 +158,13 @@ public class AdminServiceImpl implements AdminService {
     // 添加商品
     @Override
     public Results addShop(Shop shop) {
-        adminDao.addShop(shop);
-        return new Results(20000, "添加成功");
+        if (shop.getOldPrice() >= shop.getPrice()) {
+            adminDao.addShop(shop);
+            return new Results(20000, "添加成功");
+        }else {
+            return new Results(20001, "添加失败，优惠价大于原价格");
+        }
+
     }
 
     // 修改商品信息

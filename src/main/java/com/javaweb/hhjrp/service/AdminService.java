@@ -4,6 +4,7 @@ import com.javaweb.hhjrp.model.Shop;
 import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import com.javaweb.hhjrp.result.AdminResults;
+import com.javaweb.hhjrp.result.Result;
 import com.javaweb.hhjrp.result.Results;
 
 import java.util.List;
@@ -52,4 +53,13 @@ public interface AdminService {
     void logout(String token);
 
     List<Sort> getSort();
+
+    // 获取轮播图列表
+    Result getCarousel();
+
+    Result changeCarousel(int id,int start);
+
+    Result getAllShopList();
+
+    Result addCarousel(int shopId);
 }

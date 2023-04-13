@@ -26,12 +26,13 @@ public class OrderController {
     // public Results getOrders(int userId, String token){
     //     return orderService.getOrders(userId);
     // }
-    //获取用户订单详情
+    // @RequestParam(value = "token", required = false) String token
+    // 获取用户订单详情
     @GetMapping("/getOrders")
     @ResponseBody
     public AdminResults getOrders(PageTableRequest pageTableRequest,
-                                  @RequestParam(value = "userId", required = false) int userId,
-                                  @RequestParam(value = "token", required = false) String token){
+                                  @RequestParam(value = "userId", required = false) int userId
+                                  ){
         pageTableRequest.countOffset();
         return orderService.getOrders(pageTableRequest.getOffset(), pageTableRequest.getLimit(),userId);
     }

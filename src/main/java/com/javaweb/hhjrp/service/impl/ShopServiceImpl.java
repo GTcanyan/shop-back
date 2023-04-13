@@ -57,7 +57,6 @@ public class ShopServiceImpl implements ShopService {
                 }
             }
         }
-
         if(shops.size() == 0){
             return new Results(0, "获取失败");
         }else {

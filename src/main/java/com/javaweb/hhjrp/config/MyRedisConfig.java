@@ -31,6 +31,7 @@ public class MyRedisConfig {
         redisTemplate.setConnectionFactory(factory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
 
+        //使用Jackson2JsonRedisSerializer对对象进行序列化和反序列化，以方便地进行数据的存储和访问。
         // 序列化成json
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         redisTemplate.setValueSerializer(serializer);

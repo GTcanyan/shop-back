@@ -29,7 +29,7 @@ public interface ShopDao {
     List<Shop> searchShopByShopName(String key);
 
     // 获取某种商品列表的最上面的轮播图
-    @Select("select * from carousel where sort = #{type} ")
+    @Select("select * from carousel where sort = #{type} AND start != 0 ")
     List<Carousel> getCarouselList(int type);
 
     @Update("UPDATE shop SET views = views + 1 WHERE id = #{id}")
