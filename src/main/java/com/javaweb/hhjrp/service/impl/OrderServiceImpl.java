@@ -8,6 +8,7 @@ import com.javaweb.hhjrp.model.Orders;
 import com.javaweb.hhjrp.result.AdminResults;
 import com.javaweb.hhjrp.result.Results;
 import com.javaweb.hhjrp.service.OrderService;
+import com.javaweb.hhjrp.util.OrderUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalPrice = new BigDecimal(total);
         // 创建订单对象
         Orders order = new Orders();
+        order.setOrderId(OrderUtil.generateOrderNo());
         order.setUserId(userId);
         order.setTotalPrice(totalPrice);
         order.setOrderStatus(1);

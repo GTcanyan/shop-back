@@ -32,6 +32,15 @@ class HhjrpApplicationTests {
 		System.out.println(orderDao.getOrders(0,5,14));
 		// System.out.println(new Date());
 	}
+	@Test
+	void getOrderList(){
+		adminService.getOrderList(0,5,null,"4",null);
+	}
+
+	@Test
+	void getOrderDetails(){
+		adminService.getOrderDetails("1");
+	}
 
 	@Test
 	void changeCarousel(){

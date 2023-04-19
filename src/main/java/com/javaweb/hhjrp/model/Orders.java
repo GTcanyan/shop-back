@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 public class Orders {
-    private int orderId;
+    private String orderId;
     private int userId;
     private BigDecimal totalPrice;
     private int orderStatus;

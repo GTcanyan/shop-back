@@ -16,7 +16,7 @@ public interface AdminService {
     Map<String, Object> adminLogin(String username, String password);
 
     // 获取用户列表信息，包括分页功能
-    AdminResults getAllUser(Integer offset, Integer limit);
+    Result getAllUser(Integer offset, Integer limit,String username,String phone,String site);
 
     // 添加用户
     Results addUser(String username, String password, String nickname);
@@ -25,7 +25,7 @@ public interface AdminService {
     Results deleteUser(int userID);
 
     // 获取所有商品列表，同时分页
-    AdminResults getAllShop(Integer offset, Integer limit, String id,String shopname);
+    Result getAllShop(Integer offset, Integer limit, String id,String shopname);
 
     // 添加商品
     Results addShop(Shop shop);
@@ -62,4 +62,12 @@ public interface AdminService {
     Result getAllShopList();
 
     Result addCarousel(int shopId);
+
+    Result getOrderList(Integer offset, Integer limit,String orderId, String status, String site);
+
+    Result getOrderDetails(String orderId);
+
+    Result delivery(String orderId);
+
+    Result drawback(String orderId);
 }

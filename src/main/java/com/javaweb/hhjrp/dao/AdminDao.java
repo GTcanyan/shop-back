@@ -22,12 +22,14 @@ public interface AdminDao {
     // <Admin> getAdminInfo();
 
     // 获取所有用户信息，同时分页
-    @Select("select ID,username,phone,sign,site,nickname from user limit #{limit} offset #{offset}")
-    List<User> getAllUser(Integer offset, Integer limit);
+    // @Select("select ID,username,phone,sign,site,nickname from user limit #{limit} offset #{offset}")
+    List<User> getAllUser(Integer offset, Integer limit,String username,String phone,String site);
 
     // 获取用户总数
     @Select("select count(username) from user ")
     Integer getUserCount();
+
+    Integer getUserTotal(String username,String phone,String site);
 
     // 添加用户
     @Insert("insert into user(username, password, nickname, site) values(#{username}, #{password}, #{nickname}, '中国')")
@@ -44,6 +46,8 @@ public interface AdminDao {
     // 获取商品总数
     @Select("select count(ID) from shop")
     Integer getShopCount();
+
+    int getShopTotal(String id, String shopname);
 
     // 获取所有商品信息，同时分页
     // @Select("select a.*,b.sortname from shop a LEFT JOIN sort b ON a.sort=b.sortID  WHERE 1=1"

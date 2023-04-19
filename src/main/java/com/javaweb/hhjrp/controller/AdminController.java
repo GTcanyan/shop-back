@@ -57,10 +57,13 @@ public class AdminController {
     // 获取用户列表信息，包括分页功能
     @GetMapping("/getAllUser")
     @ResponseBody
-    public AdminResults getAllUser(PageTableRequest pageTableRequest){
+    public Result getAllUser(PageTableRequest pageTableRequest,
+                                   @RequestParam(value = "username", required = false) String username,
+                                   @RequestParam(value = "phone", required = false) String phone,
+                                   @RequestParam(value = "site",required = false) String site){
         pageTableRequest.countOffset(); // 先计算offset
         // System.out.println(pageTableRequest.toString());
-        return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit());
+        return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit(),username,phone,site);
         // return adminService.getAllUser(5,0);
 
     }
@@ -107,7 +110,7 @@ public class AdminController {
     // 获取所有商品列表，同时分页
     @GetMapping("/getAllShop")
     @ResponseBody
-    public AdminResults getAllShop(PageTableRequest pageTableRequest,
+    public Result getAllShop(PageTableRequest pageTableRequest,
                                    @RequestParam(value = "id", required = false) String strId,
                                    @RequestParam(value = "shopName", required = false) String shopName){
         pageTableRequest.countOffset();
@@ -163,17 +166,50 @@ public class AdminController {
     public Result getCarousel(){
         return adminService.getCarousel();
     }
+
     // 启停轮播图
     @PostMapping("/changeCarousel")
     @ResponseBody
     public Result changeCarousel(int id,int start){
         return adminService.changeCarousel(id,start);
     }
+
+    // 新增轮播图
     @PostMapping("/addCarousel")
     @ResponseBody
     public Result addCarousel(int shopId){
         return adminService.addCarousel(shopId);
     }
 
+    // 获取订单列表
+    @GetMapping("/getOrderList")
+    @ResponseBody
+    public Result getOrderList(PageTableRequest pageTableRequest,
+                               @RequestParam(value = "orderId", required = false) String orderId,
+                               @RequestParam(value = "status", required = false) String status,
+                               @RequestParam(value = "site", required = false) String site){
+        pageTableRequest.countOffset();
+        return adminService.getOrderList(pageTableRequest.getOffset(), pageTableRequest.getLimit(),orderId,status,site);
+    }
+
+    // 获取订单商品列表
+    @GetMapping("/getOrderDetails")
+    @ResponseBody
+    public Result getOrderDetails(String orderId){
+        return adminService.getOrderDetails(orderId);
+    }
+
+    // 发货处理
+    @GetMapping("/delivery")
+    @ResponseBody
+    public Result delivery(String orderId){
+        return adminService.delivery(orderId);
+    }
+    // 发货处理
+    @GetMapping("/drawback")
+    @ResponseBody
+    public Result drawback(String orderId){
+        return adminService.drawback(orderId);
+    }
 
 }

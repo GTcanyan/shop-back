@@ -1,8 +1,11 @@
 package com.javaweb.hhjrp.service.impl;
 
 import com.javaweb.hhjrp.dao.AdminDao;
+import com.javaweb.hhjrp.dao.OrderDao;
 import com.javaweb.hhjrp.dao.UserDao;
+import com.javaweb.hhjrp.dto.AdminOrderDTO;
 import com.javaweb.hhjrp.dto.IndexPage;
+import com.javaweb.hhjrp.dto.ShopSort;
 import com.javaweb.hhjrp.model.Carousel;
 import com.javaweb.hhjrp.model.Shop;
 import com.javaweb.hhjrp.model.Sort;
@@ -40,6 +43,9 @@ public class AdminServiceImpl implements AdminService {
     private UserDao userDao;
 
     @Autowired
+    private OrderDao orderDao;
+
+    @Autowired
     private RedisTemplate redisTemplate;
 
 
@@ -61,8 +67,13 @@ public class AdminServiceImpl implements AdminService {
 
     // 获取用户列表信息，包括分页功能
     @Override
-    public AdminResults getAllUser(Integer offset, Integer limit) {
-        return new AdminResults(20000, "获取成功", adminDao.getAllUser(offset, limit), adminDao.getUserCount());
+    public Result getAllUser(Integer offset, Integer limit,String username,String phone,String site) {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<User> allUser = adminDao.getAllUser(offset, limit, username,phone,site);
+        final Integer userTotal = adminDao.getUserTotal(username, phone, site);
+        resultMap.put("list",allUser);
+        resultMap.put("total",userTotal);
+        return new Result(20000, "获取成功",resultMap);
     }
 
     // 添加用户
@@ -151,8 +162,13 @@ public class AdminServiceImpl implements AdminService {
 
     // 获取所有商品列表，同时分页
     @Override
-    public AdminResults getAllShop(Integer offset, Integer limit, String id, String shopname) {
-        return new AdminResults(20000, "获取成功", adminDao.getAllShop(offset, limit,id,shopname), adminDao.getShopCount());
+    public Result getAllShop(Integer offset, Integer limit, String id, String shopname) {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<ShopSort> allShop = adminDao.getAllShop(offset, limit, id, shopname);
+        Integer shopCount = adminDao.getShopTotal(id, shopname);
+        resultMap.put("list",allShop);
+        resultMap.put("total",shopCount);
+        return new Result(20000, "获取成功",resultMap );
     }
 
     // 添加商品
@@ -242,6 +258,39 @@ public class AdminServiceImpl implements AdminService {
         redisTemplate.delete(token);
     }
 
+    // 获取订单列表
+    @Override
+    public Result getOrderList(Integer offset, Integer limit, String orderId, String status, String site) {
+        // orderDao.getOrderList(offset,limit,orderId,status,site);
+        // System.out.println(orderDao.getOrderList(offset,limit,orderId,status,site));
+        Map<String, Object> resultMap = new HashMap<>();
+        List<AdminOrderDTO> orderList = orderDao.getOrderList(offset, limit, orderId, status, site);
+        int total = orderDao.getOrderTotal(orderId, status, site);
+        resultMap.put("list",orderList);
+        resultMap.put("total",total);
+        return Result.success(resultMap);
+    }
 
+    // 获取订单商品列表
+    @Override
+    public Result getOrderDetails(String orderId) {
+        return Result.success(orderDao.getOrderDetails(orderId));
+    }
+
+    @Override
+    public Result delivery(String orderId) {
+        if (orderDao.delivery(orderId) == 1) {
+            return Result.success(20000,"发货成功");
+        }
+        return Result.fail(20001,"发货失败");
+    }
+
+    @Override
+    public Result drawback(String orderId) {
+        if (orderDao.drawback(orderId) == 1) {
+            return Result.success(20000,"退款成功");
+        }
+        return Result.fail(20001,"退款失败");
+    }
 
 }
