@@ -21,7 +21,7 @@ public class ShopController {
     private ShopService shopService;
 
 
-    //获取商品详情信息
+    // 获取商品详情信息
     @GetMapping("/getInfo")
     @ResponseBody
     public Results getInfo(int shopID){

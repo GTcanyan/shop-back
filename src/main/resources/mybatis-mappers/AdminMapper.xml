@@ -29,11 +29,62 @@
         </set>
         where t.ID = #{ID}
     </update>
-<!--    <select id="getAllShop" resultType="com.javaweb.hhjrp.model.Shop">-->
-<!--        select a.*,b.sortname-->
-<!--        from shop a-->
-<!--            LEFT JOIN sort b ON a.sort=b.sortID-->
-<!--        WHERE cast(a.ID as char) LIKE '%#{id}%'  limit #{limit} offset #{offset}-->
-<!--    </select>-->
+    <select id="getAllShop" resultType="com.javaweb.hhjrp.dto.ShopSort">
+        select a.*,b.sortName
+        from shop a
+            LEFT JOIN sort b ON a.sort=b.sortID
+        <where>
+            <if test='id != null'>
+             AND CONCAT(id) like CONCAT('%', #{id}, '%')
+             </if>
+             <if test='shopname != null'>
+                 AND name LIKE CONCAT('%', #{shopname}, '%')
+             </if>
+        </where>
+          limit #{limit} offset #{offset}
+    </select>
+    <select id="getShopTotal" resultType="int">
+        select count(a.ID)
+        from shop a
+        LEFT JOIN sort b ON a.sort=b.sortID
+        <where>
+            <if test='id != null'>
+                AND CONCAT(id) like CONCAT('%', #{id}, '%')
+            </if>
+            <if test='shopname != null'>
+                AND name LIKE CONCAT('%', #{shopname}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getUserTotal" resultType="java.lang.Integer">
+        select count(username) from user
+        <where>
+            <if test='username != null'>
+                AND nickname like CONCAT('%', #{username}, '%')
+            </if>
+            <if test='phone != null'>
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test='site != null'>
+                AND site LIKE CONCAT('%', #{site}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getAllUser" resultType="com.javaweb.hhjrp.model.User">
+        select ID,username,phone,sign,site,nickname from user
+        <where>
+            <if test='username != null'>
+                AND nickname like CONCAT('%', #{username}, '%')
+            </if>
+            <if test='phone != null'>
+                AND phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+            <if test='site != null'>
+                AND site LIKE CONCAT('%', #{site}, '%')
+            </if>
+        </where>
+        limit #{limit} offset #{offset}
+
+    </select>
 
 </mapper>

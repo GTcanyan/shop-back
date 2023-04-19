@@ -18,6 +18,10 @@ public interface UserDao {
     @Select("select count(*) from user where username = #{username}")
     int getUserByUsername(String username);
 
+    //
+    @Select("select count(*) from user where phone = #{phone}")
+    int getUserByPhone(String phone);
+
     // 用户注册，插入用户
     @Insert("insert into user(username, password, nickname, site) values(#{username}, #{password}, #{nickname}, '中国')")
     int registerUser(String username, String password, String nickname);
@@ -41,7 +45,7 @@ public interface UserDao {
     String getTokenByUserId(int ID);
 
     // 插入用户登录的时间
-    @Update("update user set last_login = now() where username = #{username}")
+    @Update("update user set last_login = now_login, now_login = now() where username = #{username}")
     void insertLoginTime(String username);
 
 

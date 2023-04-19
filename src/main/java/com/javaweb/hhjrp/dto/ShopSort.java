@@ -1,12 +1,11 @@
-package com.javaweb.hhjrp.model;
+package com.javaweb.hhjrp.dto;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class Shop {
-
+public class ShopSort {
     private int ID;
     private String name;
     private float price;
@@ -19,4 +18,5 @@ public class Shop {
     private int count;
     private Date createTime;
     private Date updateTime;
+    private String sortName;
 }

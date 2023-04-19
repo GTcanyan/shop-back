@@ -2,6 +2,7 @@ package com.javaweb.hhjrp.controller;
 
 
 import com.javaweb.hhjrp.model.Shop;
+import com.javaweb.hhjrp.model.Sort;
 import com.javaweb.hhjrp.model.User;
 import com.javaweb.hhjrp.result.AdminResults;
 import com.javaweb.hhjrp.result.PageTableRequest;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,7 +40,7 @@ public class AdminController {
     }
 
     @GetMapping("/info")
-    public Result<Map<String,Object>> getUserInfo(@RequestParam("token") String token){
+    public Result<Map<String,Object>> getAdminInfo(@RequestParam("token") String token){
         Map<String,Object> data = adminService.getAdminInfo(token);
         if(data != null){
             return Result.success(data);
@@ -55,11 +57,14 @@ public class AdminController {
     // 获取用户列表信息，包括分页功能
     @GetMapping("/getAllUser")
     @ResponseBody
-    public AdminResults getAllUser(PageTableRequest pageTableRequest){
+    public Result getAllUser(PageTableRequest pageTableRequest,
+                                   @RequestParam(value = "username", required = false) String username,
+                                   @RequestParam(value = "phone", required = false) String phone,
+                                   @RequestParam(value = "site",required = false) String site){
         pageTableRequest.countOffset(); // 先计算offset
-//        System.out.println(pageTableRequest.toString());
-        return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit());
-//        return adminService.getAllUser(5,0);
+        // System.out.println(pageTableRequest.toString());
+        return adminService.getAllUser(pageTableRequest.getOffset(), pageTableRequest.getLimit(),username,phone,site);
+        // return adminService.getAllUser(5,0);
 
     }
 
@@ -84,14 +89,32 @@ public class AdminController {
     public Results deleteUser(int userID){
         return adminService.deleteUser(userID);
     }
+
+    // 获取商品类型
+    @GetMapping("/getSort")
+    @ResponseBody
+    public Result getSort(){
+        List<Sort> data = adminService.getSort();
+        if(data != null){
+            return Result.success(data);
+        }
+        return Result.fail(20002,"用户名或密码错误");
+
+    }
+    // 获取所有商品列表
+    @GetMapping("/getAllShopList")
+    @ResponseBody
+    public Result getAllShopList(){
+        return adminService.getAllShopList();
+    }
     // 获取所有商品列表，同时分页
     @GetMapping("/getAllShop")
     @ResponseBody
-    public AdminResults getAllShop(PageTableRequest pageTableRequest,
-                                   @RequestParam(value = "id", required = false) int id,
-                                   @RequestParam(value = "shopname", required = false) String shopname){
+    public Result getAllShop(PageTableRequest pageTableRequest,
+                                   @RequestParam(value = "id", required = false) String strId,
+                                   @RequestParam(value = "shopName", required = false) String shopName){
         pageTableRequest.countOffset();
-        return adminService.getAllShop(pageTableRequest.getOffset(), pageTableRequest.getLimit(),id,shopname);
+        return adminService.getAllShop(pageTableRequest.getOffset(), pageTableRequest.getLimit(),strId,shopName);
     }
 
     // 添加商品
@@ -134,8 +157,59 @@ public class AdminController {
     // 修改管理员密码
     @PostMapping("/changePassword")
     @ResponseBody
-    public Results changePassword(String oldPassword, String newPassword){
+    public Results changePassword(String oldPassword, String newPassword) {
         return adminService.changePassword(oldPassword, newPassword);
+    }
+    // 获取轮播图数据
+    @PostMapping("/getCarousel")
+    @ResponseBody
+    public Result getCarousel(){
+        return adminService.getCarousel();
+    }
+
+    // 启停轮播图
+    @PostMapping("/changeCarousel")
+    @ResponseBody
+    public Result changeCarousel(int id,int start){
+        return adminService.changeCarousel(id,start);
+    }
+
+    // 新增轮播图
+    @PostMapping("/addCarousel")
+    @ResponseBody
+    public Result addCarousel(int shopId){
+        return adminService.addCarousel(shopId);
+    }
+
+    // 获取订单列表
+    @GetMapping("/getOrderList")
+    @ResponseBody
+    public Result getOrderList(PageTableRequest pageTableRequest,
+                               @RequestParam(value = "orderId", required = false) String orderId,
+                               @RequestParam(value = "status", required = false) String status,
+                               @RequestParam(value = "site", required = false) String site){
+        pageTableRequest.countOffset();
+        return adminService.getOrderList(pageTableRequest.getOffset(), pageTableRequest.getLimit(),orderId,status,site);
+    }
+
+    // 获取订单商品列表
+    @GetMapping("/getOrderDetails")
+    @ResponseBody
+    public Result getOrderDetails(String orderId){
+        return adminService.getOrderDetails(orderId);
+    }
+
+    // 发货处理
+    @GetMapping("/delivery")
+    @ResponseBody
+    public Result delivery(String orderId){
+        return adminService.delivery(orderId);
+    }
+    // 发货处理
+    @GetMapping("/drawback")
+    @ResponseBody
+    public Result drawback(String orderId){
+        return adminService.drawback(orderId);
     }
 
 }

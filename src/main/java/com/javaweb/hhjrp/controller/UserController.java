@@ -25,18 +25,18 @@ public class UserController {
     private TokenVerify tokenVerify;
 
 
-    @GetMapping("/test")
-    @ResponseBody
-    public User test01(){
-        return userService.getUserById(14);
-    }
+    // @GetMapping("/test")
+    // @ResponseBody
+    // public User test01(){
+    //     return userService.getUserById(14);
+    // }
 
 
     // 用户注册
     @PostMapping("/register")
     @ResponseBody
-    public Results register(String username, String password, String nickname){
-        return userService.userRegister(username, password, nickname);
+    public Results register(String username, String password, String nickname,String phone){
+        return userService.userRegister(username, password, nickname,phone);
     }
 
     // 用户登录
@@ -50,7 +50,7 @@ public class UserController {
     @GetMapping("/getInfo")
     @ResponseBody
     public Results getInfo(int userID, String token){
-        return userService.getInfo(userID, token);
+         return userService.getInfo(userID, token);
     }
 
     // 修改用户信息

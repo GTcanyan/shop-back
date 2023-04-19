@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaweb.hhjrp.dao.OrderDao">
+
+    <select id="getOrderList" resultType="com.javaweb.hhjrp.dto.AdminOrderDTO">
+        SELECT * FROM orders o LEFT JOIN `user` u on u.ID=o.user_id
+        <where>
+            <if test='orderId != null'>
+                AND CONCAT(order_id) like CONCAT('%', #{orderId}, '%')
+            </if>
+            <if test='status != null'>
+                AND CONCAT(order_status) LIKE CONCAT('%', #{status}, '%')
+            </if>
+            <if test='site != null'>
+                AND site LIKE CONCAT('%', #{site}, '%')
+            </if>
+        </where>
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="getOrderTotal" resultType="int">
+        select count(order_id) from orders o LEFT JOIN `user` u on u.ID=o.user_id
+        <where>
+            <if test='orderId != null'>
+                AND CONCAT(order_id) like CONCAT('%', #{orderId}, '%')
+            </if>
+            <if test='status != null'>
+                AND CONCAT(order_status) LIKE CONCAT('%', #{status}, '%')
+            </if>
+            <if test='site != null'>
+                AND site LIKE CONCAT('%', #{site}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Result<T> {
     private Integer code;
-    private String massage;
+    private String message;
     private T data;
 
     // 成功
@@ -23,11 +23,11 @@ public class Result<T> {
     public static <T> Result<T> success(T data){
         return new Result<>(20000,"success",data);
     }
-    public static <T> Result<T> success(T data,String massage){
-        return new Result<>(20000,massage,data);
+    public static <T> Result<T> success(T data,String message){
+        return new Result<>(20000,message,data);
     }
-    public static <T> Result<T> success(String massage){
-        return new Result<>(20000,massage,null);
+    public static <T> Result<T> success(String message){
+        return new Result<>(20000,message,null);
     }
     // 失败
     public static<T>  Result<T> fail(){

@@ -9,5 +9,5 @@ public class Carousel {
     private int sort;
     private String img;
     private int shopId;
-
+    private boolean start;
 }

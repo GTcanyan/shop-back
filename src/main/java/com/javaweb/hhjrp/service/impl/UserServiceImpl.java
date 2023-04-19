@@ -31,11 +31,16 @@ public class UserServiceImpl implements UserService {
 
     // 用户注册
     @Override
-    public Results userRegister(String username, String password, String nickname) {
-        if(userDao.getUserByUsername(username) != 0){ // 已经有这个username的用户了
+    public Results userRegister(String username, String password, String nickname,String phone) {
+        // 已经有这个username的用户了
+        if(userDao.getUserByUsername(username) != 0){
             return new Results(0,"用户名已存在");
-        }else {// 这个用户名还没有注册
-            if(userDao.registerUser(username, MD5.crypt(password), nickname) != 1){ // 插入数据库失败
+        }else if (userDao.getUserByPhone(phone) != 0){
+            return new Results(0,"手机号已存在");
+        } else {
+            // 这个用户名还没有注册
+            // 插入数据库失败
+            if(userDao.registerUser(username, MD5.crypt(password), nickname) != 1){
                 return new Results(0,"未知错误");
             }else{
                 return new Results(1,"注册成功");
@@ -90,12 +95,20 @@ public class UserServiceImpl implements UserService {
     // 修改密码
     @Override
     public Results changePassword(int id, String token, String oldPassword, String password) {
-        if(tokenVerify.tokenVerify(id, token)){ // token对了
-            User user = userDao.getUserById(id);// 先通过用户id获取用户
-            if(user.getPassword().equals(MD5.crypt(oldPassword))){ // 老密码对了
-                userDao.changePassword(id, MD5.crypt(password));// 修改密码
-                return new Results(1, "修改成功");
-            }else {
+        if(tokenVerify.tokenVerify(id, token)){
+            // token对了
+            // 先通过用户id获取用户
+            User user = userDao.getUserById(id);
+            if(user.getPassword().equals(MD5.crypt(oldPassword))){
+                // 老密码对了
+                if(user.getPassword().equals(MD5.crypt(password))) {
+                    //新密码和旧密码一样
+                    return new Results(0, "新密码和旧密码一致");
+                }else {
+                    userDao.changePassword(id, MD5.crypt(password));// 修改密码
+                    return new Results(1, "修改成功");
+                }
+            }else  {
                 return new Results(0, "原密码不正确");
             }
         }else {
